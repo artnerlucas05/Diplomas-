@@ -1,0 +1,38 @@
+/// Função para registrar o diploma
+function registrarDiploma(string memory instituicao, string memory curso, string memory aluno, uint data, uint nota) public onlyOwner {
+    require(!registrado, "Este diploma já foi registrado.");
+    nomeInstituicao = instituicao;
+    nomeCurso = curso;
+    nomeAluno = aluno;
+    dataConclusao = data;
+    notaFinal = nota;
+    registrado = true;
+    emit DiplomaRegistrado(instituicao, curso, aluno, data, nota);
+}
+
+// Função para verificar se um diploma já foi registrado
+function verificarRegistro() public view returns(bool) {
+    return registrado;
+}
+
+// Função para transferir a propriedade do contrato
+function transferirPropriedade(address newOwner) public onlyOwner {
+    owner = newOwner;
+}
+/ Definindo variáveis
+address owner;
+string public nomeInstituicao;
+string public nomeCurso;
+string public nomeAluno;
+uint public dataConclusao;
+uint public notaFinal;
+bool public registrado;
+
+// Evento que será emitido quando um diploma for registrado
+event DiplomaRegistrado(string instituicao, string curso, string aluno, uint data, uint nota);
+
+// Modificador que só permite a execução da função pelo proprietário do contrato
+modifier onlyOwner() {
+    require(msg.sender == owner, "Apenas o proprietário do contrato pode executar esta função.");
+    _;
+}
